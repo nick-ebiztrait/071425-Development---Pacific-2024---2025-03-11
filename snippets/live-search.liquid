@@ -1,0 +1,76 @@
+{% comment %}
+  @param searchResultsLayout {String}
+    Header setting.
+    Possible values: cozy, compact, comfortable
+  @param searchQuickLinks {Linklist}
+    Header setting. Quick link menu
+{% endcomment %}
+
+<div
+  class="header-livesearch"
+  data-search
+>
+  <div class="header-search-overlay" data-search-overlay></div>
+  <form
+    action="{{ routes.search_url }}"
+    method="get"
+    name="search-form"
+    autocomplete="off"
+    class="livesearch-form"
+    data-search-form
+  >
+    <div class="livesearch-form-wrapper">
+      <input
+        type="text"
+        name="q"
+        placeholder="{{ 'general.search.input_placeholder' | t }}"
+        class="livesearch-input"
+        data-search-form-input
+      />
+      <button
+        class="livesearch-button-close button"
+        type="button"
+        aria-label="{{ 'general.search.form_close' | t }}"
+        data-search-form-button-close
+      >
+        {% render 'icon' with 'close' %}
+      </button>
+    </div>
+  </form>
+
+  <div
+    class="
+      livesearch-results
+      livesearch-results-layout-{{ searchResultsLayout }}
+    "
+    data-livesearch-results
+  >
+    {% if linklists[searchQuickLinks].links.size > 0 %}
+      <div class="livesearch-dropdown-wrapper" data-livesearch-quicklinks>
+        <div class="livesearch-quicklinks">
+          <h3 class="livesearch-quicklinks-heading meta">{{ 'general.livesearch.quicklinks_heading' | t }}</h3>
+          <ul class="livesearch-quicklinks-list">
+            {% for quickLink in linklists[searchQuickLinks].links %}
+              <li><a href="{{ quickLink.url }}">{{ quickLink.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    <div
+      class="
+        livesearch-loading-state
+        livesearch-loading-state--hidden
+      "
+      aria-hidden="true"
+      data-livesearch-loading-state
+    >
+      {%
+        render 'icon' with 'spinner',
+        class: 'spinner',
+      %}
+    </div>
+  </div>
+
+</div>
