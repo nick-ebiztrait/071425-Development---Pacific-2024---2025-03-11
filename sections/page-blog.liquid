@@ -1,0 +1,90 @@
+{% if current_tags %}
+  <h2>{{ 'blogs.blog.tag_page_title' | t: tag: current_tags.first }}</h2>
+{% endif %}
+
+{% paginate blog.articles by 5 %}
+
+  <div class="blog-posts">
+    {% for article in blog.articles %}
+      {% if forloop.first %}
+        <!-- Full-width layout for the first article -->
+        <div class="full-width-article">
+          {% render 'article-list-item', article: article %}
+        </div>
+      {% else %}
+        <!-- Three-column layout for the rest of the articles -->
+        <div class="three-column-article">
+          {% render 'article-list-item', article: article %}
+        </div>
+      {% endif %}
+    {% else %}
+      <span class="empty">{{ 'blogs.blog.empty' | t }}</span>
+    {% endfor %}
+  </div>
+
+  {% if paginate.previous or paginate.next %}
+    {% render 'pagination', paginate: paginate %}
+  {% endif %}
+
+{% endpaginate %}
+
+
+
+
+<style>
+  #section-{{ section.id }} .ImageHero,
+  #section-{{ section.id }} .ImageHero .Heading {
+    color: #ffffff;
+  }
+
+  #section-{{ section.id }} .ImageHero .Button {
+    color: #1c1c1c;
+    border-color: #ffffff;
+  }
+
+  #section-{{ section.id }} .ImageHero .Button::before {
+    background-color: #ffffff;
+  }
+
+  {%- if settings.show_button_transition -%}
+    @media (-moz-touch-enabled: 0), (hover: hover) {
+      #section-{{ section.id }} .ImageHero .Button:hover {
+        color: #ffffff;
+      }
+    }
+  {%- endif -%}
+</style>
+
+{% schema %}
+{
+  "name": "Blog pages",
+  "class": "section-blog",
+  "settings": [
+ {
+      "type": "checkbox",
+      "id": "show_rss",
+      "label": "Show RSS",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show filters",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_article",
+      "label": "Show featured article",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_category",
+      "label": "Show article category",
+      "info": "The first article's tag is used as the main category.",
+      "default": false
+    }
+]
+}
+{% endschema %}
